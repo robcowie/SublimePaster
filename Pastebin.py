@@ -20,7 +20,7 @@ class PastebinPostCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         try:
             ## Select the pastebin implementation
-            implementation = self.get_pastebin_imeplementation()
+            implementation = self.get_pastebin_implementation()
             paster = implementation(self.view)
             ## Upload and set status
             content = self.selected_content()
@@ -32,7 +32,7 @@ class PastebinPostCommand(sublime_plugin.TextCommand):
             # print('Exception: %s' % exc)
             raise
 
-    def get_pastebin_imeplementation(self):
+    def get_pastebin_implementation(self):
         mode_setting = self.view.settings().get('pastebin')['mode']
         for impl in api.PastebinImplementation.plugins:
             if mode_setting == impl._name:
@@ -54,13 +54,36 @@ class PastebinFetchCommand(sublime_plugin.TextCommand):
     """"""
     def run(self, edit):
         try:
-            ## Select the pastebin implementation
-            implementation = self.get_pastebin_imeplementation()
-            paster = implementation(self.view)
-            id_ = None ## TODO: Prompt for id
-            paster.fetch(id_)
-            ##TODO: If current view has content, open a new view
-            sublime.status_message("Fetched from %s" % id)
+            self.edit = edit
+            self.view.window().show_input_panel('Paste id', '', self.on_paste_id, None, None)
         except Exception, exc:
             sublime.error_message("Unable to fetchpaste")
             print('Exception %s' % exc)
+
+    def get_pastebin_implementation(self):
+        mode_setting = self.view.settings().get('pastebin')['mode']
+        for impl in api.PastebinImplementation.plugins:
+            if mode_setting == impl._name:
+                return impl
+        raise ValueError('Unknown pastebin mode `%s`' % mode_setting)
+
+    def on_paste_id(self, paste_id):
+        implementation = self.get_pastebin_implementation()
+        paster = implementation(self.view)
+        try:
+            data, lang, url = paster.fetch(paste_id)
+        except api.TransportError, exc:
+            sublime.status_message(str(exc))
+            return
+
+        ## If view is empty set the syntax
+        ## TODO: How to derive the syntax_file?
+        # if not self.view.size() and lang:
+            # self.view.set_syntax_file()
+
+        ## Insert
+        for region in self.view.sel():
+            self.view.erase(self.edit, region)
+            self.view.insert(self.edit, region.begin(), data)
+
+        sublime.status_message("Fetched from %s" % url)

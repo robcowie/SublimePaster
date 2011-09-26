@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-from api import PastebinImplementation
+import api
 from vendor import lodgeitlib
 
 
-class Lodgeit(PastebinImplementation):
+class Lodgeit(api.PastebinImplementation):
 
     # _name = 'lodgeit'
 
@@ -48,3 +48,13 @@ class Lodgeit(PastebinImplementation):
             filename='', mimetype='', private=False)
         new_paste = self.pastebin.get_paste_by_id(paste_id)
         return new_paste.url
+
+    def fetch(self, paste_id):
+        """Return paste content, the sublime text language if known and the 
+        paste url.
+        """
+        lodgeit_to_subl_lang = dict((v, k) for k, v in self.SYNTAXES.iteritems())
+        p = self.pastebin.get_paste_by_id(paste_id)
+        if not p:
+            raise api.TransportError("Cannot fetch paste id '%s'" % paste_id)
+        return (str(p), lodgeit_to_subl_lang.get(p.language, None), p.url)
