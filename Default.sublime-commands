@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "Pastebin: Post",
+        "command": "pastebin_post"
+    }, 
+    {
+        "caption": "Pastebin: Fetch",
+        "command": "pastebin_fetch"
+    }
+]
