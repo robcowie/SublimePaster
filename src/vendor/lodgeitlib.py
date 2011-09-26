@@ -369,9 +369,9 @@ class Lodgeit(object):
 
 
 #: An instance of :class:`Lodgeit` for http://paste.pocoo.org.
-pocoo_pastebin = lodgeit = Lodgeit('http://paste.pocoo.org')
+# pocoo_pastebin = lodgeit = Lodgeit('http://paste.pocoo.org')
 #: An instance of :class:`Lodgeit` for http://bpaste.net
-bpaste_pastebin = Lodgeit('http://bpaste.net')
+# bpaste_pastebin = Lodgeit('http://bpaste.net')
 
 #: a list of :class:`Lodgeit` objects for all known lodgeit pastebins
-PASTEBINS = [pocoo_pastebin, bpaste_pastebin]
+# PASTEBINS = [pocoo_pastebin, bpaste_pastebin]
