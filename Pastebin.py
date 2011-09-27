@@ -12,70 +12,66 @@ api.load()
 
 
 ### THE COMMANDS ###
-class PastebinPostCommand(sublime_plugin.TextCommand):
-    """"""
+class PasterCommand(sublime_plugin.TextCommand):
     def __init__(self, view):
-        super(PastebinPostCommand, self).__init__(view)
+        super(PasterCommand, self).__init__(view)
+        self.window = self.view.window()
+        self.settings = self.view.settings().get('pastebin')
+        self.Paster = self.get_pastebin_implementation()
 
+    def get_pastebin_implementation(self):
+        mode = self.settings.get('mode')
+        for impl in api.PastebinImplementation.plugins:
+            if mode == impl._name:
+                return impl
+        raise ValueError('Unknown pastebin mode `%s`' % mode)
+
+    def status(self, msg, clipboard=None):
+        """Display message and optionally set clipboard contents"""
+        if clipboard:
+            sublime.set_clipboard(clipboard)
+        sublime.status_message(msg)
+
+
+class PastebinPostCommand(PasterCommand):
+    """"""
     def run(self, edit):
         try:
-            ## Select the pastebin implementation
-            implementation = self.get_pastebin_implementation()
-            paster = implementation(self.view)
-            ## Upload and set status
+            paster = self.Paster(self.view)
             content = self.selected_content()
             if not content:
                 raise ValueError('No content to post')
             paste_url = paster.upload(content)
-            sublime.set_clipboard(paste_url)
-            sublime.status_message("%s. URL has been copied to the clipboard." % paste_url)
+            self.status("%s. URL has been copied to the clipboard." % paste_url, paste_url)
         except Exception, exc:
-            # sublime.error_message(str(exc))
-            sublime.status_message(str(exc))
-
-    def get_pastebin_implementation(self):
-        mode_setting = self.view.settings().get('pastebin')['mode']
-        for impl in api.PastebinImplementation.plugins:
-            if mode_setting == impl._name:
-                return impl
-        raise ValueError('Unknown pastebin mode `%s`' % mode_setting)
+            self.status(str(exc))
 
     def selected_content(self):
         """
         Return the selected region or the entire buffer contents
         if no region is selected.
         """
-        content = '\n'.join([self.view.substr(region) for region in self.view.sel()])
+        content = u'\n'.join([self.view.substr(region) for region in self.view.sel()])
         if not content:
             content = self.view.substr(sublime.Region(0, self.view.size()))
         return content
 
 
-class PastebinFetchCommand(sublime_plugin.TextCommand):
+class PastebinFetchCommand(PasterCommand):
     """"""
     def run(self, edit):
         try:
             self.edit = edit
-            self.view.window().show_input_panel('Paste id', '', self.on_paste_id, None, None)
+            self.window.show_input_panel('Paste id', '', 
+                self.on_paste_id, None, None)
+        except api.TransportError, exc:
+            self.status(str(exc))
         except Exception, exc:
-            sublime.error_message("Unable to fetchpaste")
-            print('Exception %s' % exc)
-
-    def get_pastebin_implementation(self):
-        mode_setting = self.view.settings().get('pastebin')['mode']
-        for impl in api.PastebinImplementation.plugins:
-            if mode_setting == impl._name:
-                return impl
-        raise ValueError('Unknown pastebin mode `%s`' % mode_setting)
+            self.status("Unable to fetchpaste (%s)" % exc)
 
     def on_paste_id(self, paste_id):
-        implementation = self.get_pastebin_implementation()
-        paster = implementation(self.view)
-        try:
-            data, lang, url = paster.fetch(paste_id)
-        except api.TransportError, exc:
-            sublime.status_message(str(exc))
-            return
+        paster = self.Paster(self.view)
+        data, lang, url = paster.fetch(paste_id)
 
         ## If view is empty set the syntax
         ## TODO: How to derive the syntax_file?
@@ -87,4 +83,4 @@ class PastebinFetchCommand(sublime_plugin.TextCommand):
             self.view.erase(self.edit, region)
             self.view.insert(self.edit, region.begin(), data)
 
-        sublime.status_message("Fetched from %s" % url)
+        self.status("Fetched from %s" % url)
