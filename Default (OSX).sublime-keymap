@@ -1,0 +1,4 @@
+[
+    { "keys": ["ctrl+shift+p"], "command": "pastebin_post" },
+    { "keys": ["ctrl+shift+f"], "command": "pastebin_fetch" }
+]
