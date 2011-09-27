@@ -42,7 +42,10 @@ class PastebinPostCommand(PasterCommand):
             if not content:
                 raise ValueError('No content to post')
             paste_url = paster.upload(content)
-            self.status("%s. URL has been copied to the clipboard." % paste_url, paste_url)
+            if self.settings.get('copy_to_clipboard', True):
+                self.status("%s. URL has been copied to the clipboard." % paste_url, paste_url)
+            else:
+                self.status(paste_url)
         except Exception, exc:
             self.status(str(exc))
 
