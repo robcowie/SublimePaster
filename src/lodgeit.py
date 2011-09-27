@@ -7,8 +7,8 @@ from vendor import lodgeitlib
 
 class Lodgeit(api.PastebinImplementation):
 
-    # _name = 'lodgeit'
-
+    ## Lodgeit supports all languages pygments does, so the normalised 
+    ## syntax name is tried if no match here
     SYNTAXES = {
        #'syntax'     : 'lodgeit language code'
         'python'     : 'python',
@@ -26,7 +26,8 @@ class Lodgeit(api.PastebinImplementation):
         'tst'        : 'text',
         'plaintext'  : 'text',
         'yaml'       : 'yaml', 
-        'html'       : 'html'
+        'html'       : 'html', 
+        'html5'      : 'html', 
     }
 
     def __init__(self, view):
@@ -37,11 +38,8 @@ class Lodgeit(api.PastebinImplementation):
             password=self.config.get('password')
         )
 
-    def prepare(self, content):
-        return content
-
     def upload(self, content):
-        lang = self.language()
+        lang = self.syntax() or self.normalised_syntax()
         content = self.prepare(content)
         paste_id = self.pastebin.new_paste(
             content, lang, parent=None, 

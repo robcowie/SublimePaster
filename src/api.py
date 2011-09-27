@@ -39,11 +39,13 @@ class PastebinImplementation(object):
     def fetch(self, id):
         raise NotImplementedError()
 
-    def language(self):
-        ##TODO: rename to syntax
+    def normalised_syntax(self):
         syntax = self.view.settings().get('syntax')
-        syntax = syntax.lower()\
+        syntax.lower()\
             .replace('.tmlanguage', '')\
             .replace(' ', '')\
             .rsplit('/', 1)[-1]
-        return self.SYNTAXES.get(syntax)
+
+    def syntax(self):
+        syntax = self.normalise_syntax(syntax)
+        return self.SYNTAXES.get(syntax, '')

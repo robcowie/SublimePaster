@@ -17,7 +17,9 @@ class Dpaste(api.PastebinImplementation):
 
     SYNTAXES = {
        #'syntax'     : 'dpaste language code'
+        'apache'     : 'Apache',
         'python'     : 'Python',
+        'django'     : 'DjangoTemplate',
         'sql'        : 'Sql',
         'javascript' : 'JScript',
         'json'       : 'JScript',
@@ -27,13 +29,14 @@ class Dpaste(api.PastebinImplementation):
         'rb'         : 'Ruby',
         'rhtml'      : 'Rhtml',
         'hs'         : 'Haskell',
-        'sh'         : 'Bash'
+        'sh'         : 'Bash', 
+        'plaintext'  : ''
     }
 
     def upload(self, content):
         params = urllib.urlencode({
             'content': content, 
-            'language': self.language() or ''
+            'language': self.syntax()
         })
 
         connection = httplib.HTTPConnection('dpaste.com')
