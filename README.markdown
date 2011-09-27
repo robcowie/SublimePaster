@@ -8,10 +8,11 @@ A Sublime Text 2 plugin to provide Post/Fetch support for multiple pastebins, in
     $ cd /sublime/text/Packages/
     $ git clone https://robcowie@github.com/robcowie/sublime_paster.git
 
-Add config to User file settings. For example, dpaste
+Add config to User file settings. Only required key is `mode`.
 
     "pastebin": {
         "mode": "dpaste",
+        "copy_to_clipboard": True
     }
 
 If the pastebin implementation needs further config, such as user credentials add it here, i.e.
