@@ -24,13 +24,14 @@ class PastebinPostCommand(sublime_plugin.TextCommand):
             paster = implementation(self.view)
             ## Upload and set status
             content = self.selected_content()
+            if not content:
+                raise ValueError('No content to post')
             paste_url = paster.upload(content)
             sublime.set_clipboard(paste_url)
             sublime.status_message("%s. URL has been copied to the clipboard." % paste_url)
         except Exception, exc:
-            sublime.error_message("Unable to create paste")
-            # print('Exception: %s' % exc)
-            raise
+            # sublime.error_message(str(exc))
+            sublime.status_message(str(exc))
 
     def get_pastebin_implementation(self):
         mode_setting = self.view.settings().get('pastebin')['mode']
