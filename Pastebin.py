@@ -64,28 +64,28 @@ class PastebinPostCommand(PasterCommand):
 class PastebinFetchCommand(PasterCommand):
     """"""
     def run(self, edit):
+        self.edit = edit
+        self.window.show_input_panel('Paste id', '', 
+            self.on_paste_id, None, None)
+
+    def on_paste_id(self, paste_id):
         try:
-            self.edit = edit
-            self.window.show_input_panel('Paste id', '', 
-                self.on_paste_id, None, None)
+            paste_id = paste_id.strip()
+            paster = self.Paster(self.view)
+            data, lang, url = paster.fetch(paste_id)
+
+            ## If view is empty set the syntax
+            ## TODO: How to derive the syntax_file?
+            # if not self.view.size() and lang:
+                # self.view.set_syntax_file()
+
+            ## Insert
+            for region in self.view.sel():
+                self.view.erase(self.edit, region)
+                self.view.insert(self.edit, region.begin(), data)
+
+            self.status("Fetched from %s" % url)
         except api.TransportError, exc:
             self.status(str(exc))
         except Exception, exc:
-            self.status("Unable to fetchpaste (%s)" % exc)
-
-    def on_paste_id(self, paste_id):
-        paste_id = paste_id.strip()
-        paster = self.Paster(self.view)
-        data, lang, url = paster.fetch(paste_id)
-
-        ## If view is empty set the syntax
-        ## TODO: How to derive the syntax_file?
-        # if not self.view.size() and lang:
-            # self.view.set_syntax_file()
-
-        ## Insert
-        for region in self.view.sel():
-            self.view.erase(self.edit, region)
-            self.view.insert(self.edit, region.begin(), data)
-
-        self.status("Fetched from %s" % url)
+            self.status("Unable to fetch paste (%s)" % exc)
