@@ -7,6 +7,7 @@ https://github.com/brianriley/sublime-dpaste
 
 import httplib
 import urllib
+import urllib2
 import api
 
 
@@ -42,3 +43,18 @@ class Dpaste(api.PastebinImplementation):
             return response.getheader('Location', '')
         else:
             raise api.TransportError('There was an error. Please try again later.')
+
+    def fetch(self, paste_id):
+        # dpaste_to_subl_lang = dict((v, k) for k, v in self.SYNTAXES.iteritems())
+        url = 'http://dpaste.com/%s/plain/' % paste_id
+        try:
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req)
+            data = response.read()
+        except urllib2.HTTPError, exc:
+            msg = str(exc)
+            if exc.code == 404:
+                msg = "Unknown paste id '%s'" % paste_id
+            raise api.TransportError(msg)
+
+        return (data, None, url)
