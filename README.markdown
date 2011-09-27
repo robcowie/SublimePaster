@@ -14,6 +14,20 @@ Add config to User file settings. For example, dpaste
         "mode": "dpaste",
     }
 
+If the pastebin implementation needs further config, such as user credentials add it here, i.e.
+
+    "pastebin": {
+        "mode"       : "dpaste",
+        "username"   : "Tim the Enchanter", 
+        "password"   : "antioch", 
+        "user_token" : "e4023a6b-a9fc-40d8-bdfb-357ea7bb60cb"
+    }
+
+
+# Usage
+
+Default key bindings are shift+ctrl+p to post and shift+ctrl+f to fetch
+
 
 # License
 
