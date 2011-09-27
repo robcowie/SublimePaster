@@ -16,6 +16,7 @@ class PasterCommand(sublime_plugin.TextCommand):
     def __init__(self, view):
         super(PasterCommand, self).__init__(view)
         self.window = self.view.window()
+        # self.window = sublime.active_window()
         self.settings = self.view.settings().get('pastebin')
         self.Paster = self.get_pastebin_implementation()
 
@@ -73,6 +74,7 @@ class PastebinFetchCommand(PasterCommand):
             self.status("Unable to fetchpaste (%s)" % exc)
 
     def on_paste_id(self, paste_id):
+        paste_id = paste_id.strip()
         paster = self.Paster(self.view)
         data, lang, url = paster.fetch(paste_id)
 
