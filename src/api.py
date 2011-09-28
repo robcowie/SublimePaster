@@ -44,12 +44,12 @@ class PastebinImplementation(object):
     def normalised_syntax(self):
         """Return our best guess given the language file path"""
         syntax = self.view.settings().get('syntax')
-        syntax.lower()\
+        return syntax.lower()\
             .replace('.tmlanguage', '')\
             .replace(' ', '')\
             .rsplit('/', 1)[-1]
 
     def syntax(self):
-        syntax = self.normalise_syntax(syntax)
         """Return a syntax known to the pastebin"""
+        syntax = self.normalised_syntax()
         return self.SYNTAXES.get(syntax, '')
