@@ -34,12 +34,15 @@ class PastebinImplementation(object):
         return content
 
     def upload(self, content):
+        """Return the url to the new paste"""
         raise NotImplementedError()
 
     def fetch(self, id):
+        """Return (content, syntax, url)"""
         raise NotImplementedError()
 
     def normalised_syntax(self):
+        """Return our best guess given the language file path"""
         syntax = self.view.settings().get('syntax')
         syntax.lower()\
             .replace('.tmlanguage', '')\
@@ -48,4 +51,5 @@ class PastebinImplementation(object):
 
     def syntax(self):
         syntax = self.normalise_syntax(syntax)
+        """Return a syntax known to the pastebin"""
         return self.SYNTAXES.get(syntax, '')
