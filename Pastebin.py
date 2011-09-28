@@ -15,8 +15,8 @@ api.load()
 class PasterCommand(sublime_plugin.TextCommand):
     def __init__(self, view):
         super(PasterCommand, self).__init__(view)
-        self.window = self.view.window()
-        # self.window = sublime.active_window()
+        # self.window = self.view.window()
+        self.window = sublime.active_window()
         self.settings = self.view.settings().get('pastebin')
         self.Paster = self.get_pastebin_implementation()
 
