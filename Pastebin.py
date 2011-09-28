@@ -38,17 +38,27 @@ class PastebinPostCommand(PasterCommand):
     """"""
     def run(self, edit):
         try:
-            paster = self.Paster(self.view)
-            content = self.selected_content()
-            if not content:
+            self.paster = self.Paster(self.view)
+            self.content = self.selected_content()
+            if not self.content:
                 raise ValueError('No content to post')
-            paste_url = paster.upload(content)
+            if not self.settings.get('prompt_on_post'):
+                self.go()
+            else:
+                self.window.show_input_panel(
+                    'Confirm post snippet? [y/n]', 'y', self.go, None, None)
+        except Exception, exc:
+            self.status(str(exc))
+
+    def go(self, confirm_choice='y'):
+        if confirm_choice.lower() == 'y':
+            paste_url = self.paster.upload(self.content)
             if self.settings.get('copy_to_clipboard', True):
                 self.status("%s. URL has been copied to the clipboard." % paste_url, paste_url)
             else:
                 self.status(paste_url)
-        except Exception, exc:
-            self.status(str(exc))
+        else:
+            self.status('Cancelled')
 
     def selected_content(self):
         """
