@@ -42,7 +42,7 @@ class PastebinPostCommand(PasterCommand):
             self.content = self.selected_content()
             if not self.content:
                 raise ValueError('No content to post')
-            if not self.settings.get('prompt_on_post'):
+            if not self.settings.get('prompt_on_post', True):
                 self.go()
             else:
                 self.window.show_input_panel(
