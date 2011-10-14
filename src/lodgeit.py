@@ -48,11 +48,12 @@ class Lodgeit(api.PastebinImplementation):
         return new_paste.url
 
     def fetch(self, paste_id):
-        """Return paste content, the sublime text language if known and the 
-        paste url.
+        """Return a 3-tuple with paste content (unicode), the sublime text 
+        language if known and the paste url.
+        e.g. (u'interesting content', 'plain', 'http://')
         """
         lodgeit_to_subl_lang = dict((v, k) for k, v in self.SYNTAXES.iteritems())
         p = self.pastebin.get_paste_by_id(paste_id)
         if not p:
             raise api.TransportError("Cannot fetch paste id '%s'" % paste_id)
-        return (str(p), lodgeit_to_subl_lang.get(p.language, None), p.url)
+        return (p.code, lodgeit_to_subl_lang.get(p.language, None), p.url)

@@ -53,7 +53,7 @@ class Dpaste(api.PastebinImplementation):
         try:
             req = urllib2.Request(url)
             response = urllib2.urlopen(req)
-            data = response.read()
+            data = response.read().decode('utf8')
         except urllib2.HTTPError, exc:
             msg = str(exc)
             if exc.code == 404:

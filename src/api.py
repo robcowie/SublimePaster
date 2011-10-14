@@ -31,7 +31,7 @@ class PastebinImplementation(object):
         self.config = self.view.settings().get('pastebin')
 
     def prepare(self, content):
-        return content
+        return content.encode('utf8')
 
     def upload(self, content):
         """Return the url to the new paste"""
