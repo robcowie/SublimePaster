@@ -30,6 +30,9 @@ class PastebinImplementation(object):
         self.view = view
         self.config = self.view.settings().get('pastebin')
 
+    def url(self):
+        return self.config.get('url')
+
     def prepare(self, content):
         return content.encode('utf8')
 

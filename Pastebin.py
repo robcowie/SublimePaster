@@ -45,8 +45,9 @@ class PastebinPostCommand(PasterCommand):
             if not self.settings.get('prompt_on_post', True):
                 self.go()
             else:
+                msg = 'post snippet to %s? [y/n]' % self.paster.url()
                 self.window.show_input_panel(
-                    'Confirm post snippet? [y/n]', 'y', self.go, None, None)
+                    msg, 'y', self.go, None, None)
         except Exception, exc:
             self.status(str(exc))
 

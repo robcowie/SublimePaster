@@ -33,6 +33,10 @@ class Dpaste(api.PastebinImplementation):
         'plaintext'  : ''
     }
 
+    def url(self):
+        print self.config.get('url')
+        return self.config.get('url') or 'http://dpaste.com/'
+
     def upload(self, content):
         params = urllib.urlencode({
             'content': content, 
@@ -49,7 +53,7 @@ class Dpaste(api.PastebinImplementation):
 
     def fetch(self, paste_id):
         # dpaste_to_subl_lang = dict((v, k) for k, v in self.SYNTAXES.iteritems())
-        url = 'http://dpaste.com/%s/plain/' % paste_id
+        url = '%s%s/plain/' % (self.url(), paste_id)
         try:
             req = urllib2.Request(url)
             response = urllib2.urlopen(req)

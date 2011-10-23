@@ -33,7 +33,7 @@ class Lodgeit(api.PastebinImplementation):
     def __init__(self, view):
         super(Lodgeit, self).__init__(view)
         self.pastebin = lodgeitlib.Lodgeit(
-            self.config.get('url'), 
+            self.url(), 
             username=self.config.get('username'), 
             password=self.config.get('password')
         )
