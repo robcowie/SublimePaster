@@ -38,6 +38,10 @@ class Lodgeit(api.PastebinImplementation):
             password=self.config.get('password')
         )
 
+    def prepare(self, content):
+        """lodgeitlib.new_paste() requires unicode, so don't encode"""
+        return content
+
     def upload(self, content):
         lang = self.syntax() or self.normalised_syntax()
         content = self.prepare(content)
