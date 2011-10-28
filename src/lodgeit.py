@@ -7,27 +7,16 @@ from vendor import lodgeitlib
 
 class Lodgeit(api.PastebinImplementation):
 
-    ## Lodgeit supports all languages pygments does, so the normalised 
-    ## syntax name is tried if no match here
     SYNTAXES = {
        #'syntax'     : 'lodgeit language code'
-        'python'     : 'python',
-        'sql'        : 'sql',
         'javascript' : 'js',
         'json'       : 'js',
-        'css'        : 'css',
-        'xml'        : 'xml',
-        'diff'       : 'diff',
         'rb'         : 'ruby',
-        'rhtml'      : 'rhtml',
         'hs'         : 'literate-haskell',
-        'sh'         : 'bash', 
-        'ini'        : 'ini', 
         'tst'        : 'text',
         'plaintext'  : 'text',
-        'yaml'       : 'yaml', 
-        'html'       : 'html', 
         'html5'      : 'html', 
+        'shell-unix-generic' : 'bash'
     }
 
     def __init__(self, view):
@@ -44,6 +33,9 @@ class Lodgeit(api.PastebinImplementation):
 
     def upload(self, content):
         lang = self.syntax() or self.normalised_syntax()
+        ## Default to 'text' if language is unsupported
+        if lang not in self.pastebin.languages:
+            lang = 'text'
         content = self.prepare(content)
         paste_id = self.pastebin.new_paste(
             content, lang, parent=None, 
