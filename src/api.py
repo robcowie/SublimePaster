@@ -4,6 +4,7 @@
 def load():
     import lodgeit
     import dpaste
+    import pastie
 
 
 class TransportError(Exception):
