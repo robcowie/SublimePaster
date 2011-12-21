@@ -9,18 +9,6 @@ import api
 
 class Pastie(api.PastebinImplementation):
 
-    SYNTAXES = {
-       #'syntax'     : 'pastie language code'
-        'javascript' : 'javascript',
-        'json'       : 'javascript',
-        'rb'         : 'ruby',
-        'hs'         : 'literate_haskell',
-        'tst'        : 'plain_text',
-        'plaintext'  : 'plain_text',
-        'html5'      : 'html', 
-        'shell-unix-generic' : 'shell-unix-generic'
-    }
-
     def url(self):
         print self.config.get('url')
         return self.config.get('url') or 'http://pastie.org/'
