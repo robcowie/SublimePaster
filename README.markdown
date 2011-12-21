@@ -1,6 +1,6 @@
 # Sublime Paster
 
-A Sublime Text 2 plugin to provide Post/Fetch support for multiple pastebins, including Lodgeit and dpaste.com
+A Sublime Text 2 plugin to provide Post/Fetch support for multiple pastebins, including Lodgeit, dpaste.com and pastie.org
 
 
 # Install & Config
