@@ -31,10 +31,8 @@ A good example for using Pastie is:
         "username" : "Tim the Enchanter"
         "copy_to_clipboard": true,
         "prompt_on_post" : false,
-        "private": 1,
+        "private": true,
     }
-
-(Note that private must set to `1` or `0` for Pastie)
 
 # Usage
 
