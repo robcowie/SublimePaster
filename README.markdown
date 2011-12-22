@@ -1,6 +1,6 @@
 # Sublime Paster
 
-A Sublime Text 2 plugin to provide Post/Fetch support for multiple pastebins, including Lodgeit and dpaste.com
+A Sublime Text 2 plugin to provide Post/Fetch support for multiple pastebins, including Lodgeit, dpaste.com and pastie.org
 
 
 # Install & Config
@@ -12,7 +12,7 @@ Add config to User file settings. Only required key is `mode`.
 
     "pastebin": {
         "mode": "dpaste",
-        "copy_to_clipboard": True
+        "copy_to_clipboard": true
     }
 
 If the pastebin implementation needs further config, such as user credentials add it here, i.e.
@@ -24,6 +24,15 @@ If the pastebin implementation needs further config, such as user credentials ad
         "user_token" : "e4023a6b-a9fc-40d8-bdfb-357ea7bb60cb"
     }
 
+A good example for using Pastie is:
+
+    "pastebin": {
+        "mode": "pastie",
+        "username" : "Tim the Enchanter"
+        "copy_to_clipboard": true,
+        "prompt_on_post" : false,
+        "private": true,
+    }
 
 # Usage
 
