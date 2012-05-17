@@ -3,7 +3,6 @@
 
 import httplib
 import urllib
-import urllib2
 import api
 
 
