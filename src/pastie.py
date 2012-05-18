@@ -41,7 +41,7 @@ class Pastie(api.PastebinImplementation):
             'paste[authorization]': 'burger',
             'paste[parser]': syntax,
             'paste[body]': content,
-            'paste[restricted]': abs(self.config.get('private')) or 0
+            'paste[restricted]': abs(self.config.get('private', 0)) or 0
         }
         if self.config.get('username') is not None:
             params['paste[display_name]'] = self.config.get('username')
