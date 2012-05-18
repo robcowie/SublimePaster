@@ -3,20 +3,43 @@
 
 import httplib
 import urllib
-import urllib2
 import api
 
 
 class Pastie(api.PastebinImplementation):
+
+    SYNTAXES = {
+       #'syntax'     : 'pastie language code'
+       'apache'     : 'apache',
+       'python'     : 'python',
+       'php'        : 'php',
+       'sql'        : 'sql',
+       'javascript' : 'javascript',
+       'json'       : 'javascript',
+       'css'        : 'css',
+       'xml'        : 'html',
+       'html'       : 'html',
+       'diff'       : 'diff',
+       'rb'         : 'ruby',
+       'hs'         : 'haskell',
+       'sh'         : 'shell-unix-generic',
+       'java'       : 'java',
+       'plaintext'  : 'plain_text'
+       }
 
     def url(self):
         print self.config.get('url')
         return self.config.get('url') or 'http://pastie.org/'
 
     def upload(self, content):
+        syntax = 'plain_text'
+
+        if self.syntax() in self.SYNTAXES:
+            syntax = self.SYNTAXES[self.syntax()]
+
         params = {
             'paste[authorization]': 'burger',
-            'paste[parser]': 'plain_text',
+            'paste[parser]': syntax,
             'paste[body]': content,
             'paste[restricted]': abs(self.config.get('private')) or 0
         }
