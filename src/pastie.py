@@ -10,44 +10,42 @@ class Pastie(api.PastebinImplementation):
 
     SYNTAXES = {
        #'syntax'     : 'pastie language code'
-       'apache'     : 'apache',
-       'python'     : 'python',
-       'php'        : 'php',
-       'sql'        : 'sql',
-       'javascript' : 'javascript',
-       'json'       : 'javascript',
-       'css'        : 'css',
-       'xml'        : 'html',
-       'html'       : 'html',
-       'diff'       : 'diff',
-       'rb'         : 'ruby',
-       'hs'         : 'haskell',
-       'sh'         : 'shell-unix-generic',
-       'java'       : 'java',
-       'plaintext'  : 'plain_text'
+       'apache'     : '22',
+       'python'     : '16',
+       'php'        : '15',
+       'sql'        : '14',
+       'javascript' : '10',
+       'json'       : '10',
+       'css'        : '8',
+       'xml'        : '11',
+       'html'       : '11',
+       'diff'       : '5',
+       'rb'         : '3',
+       'hs'         : '29',
+       'sh'         : '13',
+       'java'       : '9',
+       'plaintext'  : '6'
        }
 
     def url(self):
-        print self.config.get('url')
-        return self.config.get('url') or 'http://pastie.org/'
+        return self.config.get('url') or 'pastie.org'
 
     def upload(self, content):
-        syntax = 'plain_text'
-
+        syntax = '6'
         if self.syntax() in self.SYNTAXES:
             syntax = self.SYNTAXES[self.syntax()]
 
         params = {
+            'utf8': '&#x2713;',
             'paste[authorization]': 'burger',
-            'paste[parser]': syntax,
+            'paste[access_key]': 'hidden',
+            'paste[parser_id]': syntax,
             'paste[body]': content,
             'paste[restricted]': abs(self.config.get('private', 0)) or 0
         }
-        if self.config.get('username') is not None:
-            params['paste[display_name]'] = self.config.get('username')
 
-        connection = httplib.HTTPConnection('pastie.org')
-        connection.request('POST', '/pastes/create', urllib.urlencode(params))
+        connection = httplib.HTTPConnection(self.url())
+        connection.request('POST', '/pastes', urllib.urlencode(params))
         response = connection.getresponse()
         return response.getheader('Location', '')
 
