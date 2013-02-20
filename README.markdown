@@ -5,8 +5,8 @@ A Sublime Text 2 plugin to provide Post/Fetch support for multiple pastebins, in
 
 # Install & Config
 
-    $ cd /sublime/text/Packages/
-    $ git clone https://robcowie@github.com/robcowie/sublime_paster.git
+    $ cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages
+    $ git clone git://github.com/robcowie/SublimePaster.git
 
 Add config to User file settings. Only required key is `mode`.
 
